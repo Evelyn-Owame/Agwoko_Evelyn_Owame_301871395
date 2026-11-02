@@ -4,11 +4,17 @@
 
 ## Case study
 
-My case study is Synthetic Bank and Fintech Platform. I designed the database for customer-service analysts reviewing account activity and database students testing constraints and query plans, with separate tables named customers, accounts and payments. It supports these operations: register customers and open accounts; record payments with retry-safe idempotency keys; review and summarize payment activity.
+My case study is a Synthetic Bank and Fintech Platform, a simulated financial environment built to explore how a relational database can support real banking workflows. I designed the database with two main audiences in mind. The first is customer-service analysts, who need to review account activity and investigate payment histories. The second is database students, who need a reliable environment for testing constraints and examining query execution plans.
+
+The data is organized into three separate tables: customers, accounts and payments. Separating these entities keeps each table focused on one subject and reduces redundancy. Together, they support three core operations:
+
+Registering customers and opening accounts, so that every account is tied to a verified customer record.
+Recording payments with retry-safe idem-potency keys, so that if a payment request is submitted more than once (for example, after a network failure or timeout), the system recognizes the repeat and does not process the same payment twice.
+Reviewing and summarizing payment activity, so that analysts can examine transactions per account or customer and produce meaningful summaries.
 
 ## Portfolio 1: Database Design and Modelling
 
-I organised the relational design into 3 tables. Primary keys identify records, foreign keys preserve the links, and checks enforce the stated business rules. When idempotency_key is not null, the account_id and idempotency_key pair must be unique, enforced by a partial unique index where idempotency_key is not null. The normalisation examples show the sample data at 1NF, 2NF and 3NF. All 23 deliberately invalid inserts were rejected without changing the valid sample rows.
+I organized the relational design into 3 tables. Primary keys identify records, foreign keys preserve the links, and checks enforce the stated business rules. When idem-potency_key is not null, the account_id and idem-potency_key pair must be unique, enforced by a partial unique index where idem-potency_key is not null. The normalization examples show the sample data at 1NF, 2NF and 3NF. All 23 deliberately invalid inserts were rejected without changing the valid sample rows.
 
 ![Synthetic Bank and Fintech Platform ER diagram](images/Agwoko_Evelyn_Owame_301871395_ERDiagram.png)
 
@@ -16,7 +22,7 @@ Figure 1. Tables, keys and relationships. PK: primary key; FK: foreign key; UK: 
 
 <!-- PAGE BREAK -->
 
-## Portfolio 2: Query Processing and Optimisation
+## Portfolio 2: Query Processing and Optimization
 
 I ran three SQL queries against the sample records. The join returned 2 rows and included Avery Chen with USD. For the index comparison, I used 50,000 separate performance rows. The median lookup time changed from 2.474 ms to 0.312 ms. Both phases returned the same records. The measured plan used the new index. These timings apply to this lookup and environment.
 
@@ -43,7 +49,7 @@ I proposed three MongoDB replica members across separate failure zones. The disc
 
 ## Individual reflection
 
-I kept customers, accounts, payments in separate tables so their details could be maintained without repeating them in every related record. When idempotency_key is not null, the account_id and idempotency_key pair must be unique, enforced by a partial unique index where idempotency_key is not null. The constraint tests check this alongside the required values and record links. One issue illustrated by the two-session exercise is that both sessions can read the same value before either update is committed. Locking the row before reading preserves both increments. The index comparison also shows why I need to check the execution plan as well as the final answer: the same result can require different amounts of database work.
+I kept customers, accounts, payments in separate tables so their details could be maintained without repeating them in every related record. When idem-potency_key is not null, the account_id and idem-potency_key pair must be unique, enforced by a partial unique index where idem-potency_key is not null. The constraint tests check this alongside the required values and record links. One issue illustrated by the two-session exercise is that both sessions can read the same value before either update is committed. Locking the row before reading preserves both increments. The index comparison also shows why I need to check the execution plan as well as the final answer: the same result can require different amounts of database work.
 
 ## AI-use declaration
 
